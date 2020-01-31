@@ -60,16 +60,14 @@ hittable *random_scene(){
                 if(choose_material < 0.8){
                     radius = random_double() / 10 + 0.2;
                     vec3 center2(center.x(), radius, center.z());
-                    spheres[i++] = new sphere(center2, radius,
-                                              new lambertian(vec3(
+                    spheres[i++] = new sphere(center2, radius, new lambertian(vec3(
                                     my_rand(),
                                     my_rand(),
                                     my_rand())));
                 } else if (choose_material < 0.95){
                     radius = random_double() / 10 + 0.2;
                     vec3 center2(center.x(), radius, center.z());
-                    spheres[i++] = new sphere(center2, radius,
-                                              new metal(vec3(
+                    spheres[i++] = new sphere(center2, radius, new metal(vec3(
                                     0.5*(1 + my_rand()),
                                     0.5*(1 + my_rand()),
                                     0.5*(1 + my_rand())),
