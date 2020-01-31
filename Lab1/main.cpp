@@ -355,7 +355,7 @@ void keyboard(unsigned char theKey, int mouseX, int mouseY){
         case 't':
             showTangents = !showTangents;
             break;
-        case 'k':
+        case 'p':
             showControlPolygon = !showControlPolygon;
             break;
     }
