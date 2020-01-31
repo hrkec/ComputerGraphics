@@ -46,7 +46,7 @@ double my_rand(){
     return ((double)(rand()%100001) / 100000);
 }
 
-hittable *random_scene(){
+hittable *random_world(){
     int n = 500;
     hittable **spheres = new hittable*[n];
     spheres[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(vec3(0.4, 0.5, 0.6)));
@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
     std::ofstream MyFile("awesome.ppm");
     MyFile << "P3\n" << nx << " " << ny << "\n255\n";
 
-    hittable *world = random_scene();
+    hittable *world = random_world();
 
     /*hittable *list[5];
     list[0] = new sphere(vec3(0, 0, -1), 0.5, new lambertian(vec3(0.8, 0.1, 0.1)));

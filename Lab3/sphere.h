@@ -20,9 +20,10 @@ bool sphere::hit(const class ray &r, double tmin, double tmax, hit_record& rec) 
     double a = dot(r.direction(), r.direction());
     double b = dot(oc, r.direction());
     double c = dot(oc, oc) - radius*radius;
-    double discriminant = b * b - a * c;
-    if (discriminant > 0) {
-        double temp = (-b - sqrt(discriminant))/a;
+    double d = b * b - a * c;
+    
+    if (d > 0) {
+        double temp = (-b - sqrt(d))/a;
         if (temp > tmin && temp < tmax) {
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
@@ -30,7 +31,8 @@ bool sphere::hit(const class ray &r, double tmin, double tmax, hit_record& rec) 
             rec.mat = mat;
             return true;
         }
-        temp = (-b + sqrt(discriminant)) / a;
+        temp = (-b + sqrt(d)) / a;
+
         if (temp > tmin && temp < tmax) {
             rec.t = temp;
             rec.p = r.point_at_parameter(rec.t);
@@ -39,6 +41,7 @@ bool sphere::hit(const class ray &r, double tmin, double tmax, hit_record& rec) 
             return true;
         }
     }
+
     return false;
 }
 

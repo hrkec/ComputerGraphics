@@ -9,12 +9,12 @@ public:
     vec3 lower_left_corner;
     vec3 horizontal, vertical;
 
-    camera(vec3 lookfrom, vec3 lookat, vec3 vup, double vfov, double aspect){
+    camera(vec3 lookfrom, vec3 lookat, vec3 vup, double fov, double aspect){
         vec3 u, v, w;
-        double theta = vfov * M_PI / 180;
-        double half_height = tan(theta / 2);
-        double half_width = aspect * half_height;
         origin = lookfrom;
+        double angle = fov * M_PI / 180;
+        double half_height = tan(angle / 2);
+        double half_width = aspect * half_height;
         w = unit_vector(lookfrom - lookat);
         u = unit_vector(cross(vup, w));
         v = cross(w, u);
@@ -25,7 +25,7 @@ public:
     }
 
     ray get_ray(double u, double v){
-        return ray(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+        return ray(origin, lower_left_corner + horizontal * u + vertical * v - origin);
     }
 
 };

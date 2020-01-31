@@ -25,9 +25,9 @@ vec3 reflect(const vec3&v, const vec3& n){
 bool refract(const vec3& v, const vec3& n, double ni_nt, vec3& refracted) {
     vec3 uv = unit_vector(v);
     double dt = dot(uv, n);
-    double discriminant = 1.0 - ni_nt * ni_nt * (1 - dt * dt);
-    if (discriminant > 0) {
-        refracted = ni_nt * (uv - n * dt) - n * sqrt(discriminant);
+    double d = 1.0 - ni_nt * ni_nt * (1 - dt * dt);
+    if (d > 0) {
+        refracted = ni_nt * (uv - n * dt) - n * sqrt(d);
         return true;
     }
     else
@@ -46,9 +46,9 @@ public:
 
     lambertian(const vec3& a) : albedo(a){}
     virtual bool scatter(const ray &r_in, const hit_record &rec, vec3 &attenuation, ray &scattered) const override{
+        attenuation = albedo;
         vec3 target = rec.p + rec.normal + random_in_unit_sphere();
         scattered = ray(rec.p, target - rec.p);
-        attenuation = albedo;
         return true;
     }
 };
@@ -64,43 +64,39 @@ public:
     }
 
     virtual bool scatter(const ray &r_in, const hit_record &rec, vec3 &attenuation, ray &scattered) const override{
+        attenuation = albedo;
         vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
         scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere());
-        attenuation = albedo;
         return (dot(scattered.direction(), rec.normal) > 0);
     }
 };
 
 class glass : public material {
 public:
-    double ref_idx;
+    double idx;
 
-    glass(double ri) : ref_idx(ri) {}
+    glass(double ri) : idx(ri) {}
 
     virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
-        vec3 outward_normal;
-        vec3 reflected = reflect(r_in.direction(), rec.normal);
-        double ni_over_nt;
         attenuation = vec3(1.0, 1.0, 1.0);
-        vec3 refracted;
-
-        double reflect_p;
-        double cosine;
+        double ni_nt, reflect_p, cosine;
+        vec3 normal, refracted;
+        vec3 reflected = reflect(r_in.direction(), rec.normal);
 
         if (dot(r_in.direction(), rec.normal) > 0) {
-            outward_normal = -rec.normal;
-            ni_over_nt = ref_idx;
-            cosine = ref_idx * dot(r_in.direction(), rec.normal)
+            normal = -rec.normal;
+            ni_nt = idx;
+            cosine = idx * dot(r_in.direction(), rec.normal)
                      / r_in.direction().length();
         } else {
-            outward_normal = rec.normal;
-            ni_over_nt = 1.0 / ref_idx;
-            cosine = -dot(r_in.direction(), rec.normal)
+            normal = rec.normal;
+            ni_nt = 1.0 / idx;
+            cosine = -1 * dot(r_in.direction(), rec.normal)
                      / r_in.direction().length();
         }
 
-        if (refract(r_in.direction(), outward_normal, ni_over_nt, refracted)) {
-            reflect_p = schlick(cosine, ref_idx);
+        if (refract(r_in.direction(), normal, ni_nt, refracted)) {
+            reflect_p = schlick(cosine, idx);
         } else {
             reflect_p = 1.0;
         }
