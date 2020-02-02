@@ -11,11 +11,11 @@ public:
 
     sphere() {}
     sphere(vec3 cen, double r, material *m) : center(cen), radius(r), mat(m)  {};
-    virtual bool hit(const ray& r, double tmin, double tmax, hit_record& rec) const;
+    virtual bool hit(const ray& r, double tmin, double tmax, hit_record& record) const;
 
 };
 
-bool sphere::hit(const class ray &r, double tmin, double tmax, hit_record& rec) const {
+bool sphere::hit(const class ray &r, double tmin, double tmax, hit_record& record) const {
     vec3 oc = r.origin() - center;
     double a = dot(r.direction(), r.direction());
     double b = dot(oc, r.direction());
@@ -25,19 +25,19 @@ bool sphere::hit(const class ray &r, double tmin, double tmax, hit_record& rec) 
     if (d > 0) {
         double temp = (-b - sqrt(d))/a;
         if (temp > tmin && temp < tmax) {
-            rec.t = temp;
-            rec.p = r.point_at_parameter(rec.t);
-            rec.normal = (rec.p - center) / radius;
-            rec.mat = mat;
+            record.t = temp;
+            record.p = r.point_at_parameter(record.t);
+            record.normal = (record.p - center) / radius;
+            record.mat = mat;
             return true;
         }
         temp = (-b + sqrt(d)) / a;
 
         if (temp > tmin && temp < tmax) {
-            rec.t = temp;
-            rec.p = r.point_at_parameter(rec.t);
-            rec.normal = (rec.p - center) / radius;
-            rec.mat = mat;
+            record.t = temp;
+            record.p = r.point_at_parameter(record.t);
+            record.normal = (record.p - center) / radius;
+            record.mat = mat;
             return true;
         }
     }

@@ -10,18 +10,18 @@ public:
 
     hittable_list() = default;
     hittable_list(hittable **l, int n): list(l), list_size(n) {}
-    virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const;
+    virtual bool hit(const ray &r, double t_min, double t_max, hit_record &record) const;
 };
 
-bool hittable_list::hit(const class ray & r, double t_min, double t_max, hit_record& rec) const {
+bool hittable_list::hit(const class ray & r, double t_min, double t_max, hit_record& record) const {
     bool hit = false;
     double closest_so_far = t_max;
-    hit_record temp_rec;
+    hit_record temp_record;
 
     for(int i = 0; i < list_size; i++){
-        if(list[i]->hit(r, t_min, closest_so_far, temp_rec)){
-            closest_so_far = temp_rec.t;
-            rec = temp_rec;
+        if(list[i]->hit(r, t_min, closest_so_far, temp_record)){
+            closest_so_far = temp_record.t;
+            record = temp_record;
             hit = true;
         }
     }

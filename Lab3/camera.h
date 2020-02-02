@@ -20,7 +20,9 @@ public:
         v = cross(w, u);
 
         lower_left_corner = origin - half_width * u - half_height * v - w;
+
         horizontal = 2 * half_width * u;
+
         vertical = 2 * half_height * v;
     }
 
